@@ -18,8 +18,3 @@ Follow the bellow steps to allow app install from unknown sources:
 * Check the option "Unknown sources"
 * Tap *OK* on the prompt
 * Select *Trust*
-
-#### Project Management
-
-* All our user stories can be tracked at [Basic Functionality](https://github.com/poster-decoder/PosterDecoder_Kotlin/projects/1) board.
-* Some reported bugs fixed are documented under [bug label](https://github.com/poster-decoder/PosterDecoder_Kotlin/issues?q=label%3Abug+is%3Aclosed)
