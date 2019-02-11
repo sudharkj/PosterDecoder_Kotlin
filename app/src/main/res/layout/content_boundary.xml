@@ -9,7 +9,7 @@
         tools:showIn="@layout/activity_boundary"
         tools:context=".BoundaryActivity">
 
-    <com.sudharkj.posterdecoder.kotlin.views.DrawingView
+    <com.sudharkj.posterdecoder.kotlin.views.CropView
             android:id="@+id/boundary_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

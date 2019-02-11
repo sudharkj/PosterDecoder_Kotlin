@@ -16,16 +16,28 @@ import com.sudharkj.posterdecoder.kotlin.models.AsyncObject
 import com.sudharkj.posterdecoder.kotlin.models.AsyncResponse
 import com.sudharkj.posterdecoder.kotlin.utils.Helper
 import com.sudharkj.posterdecoder.kotlin.utils.ImageAsyncTask
-import com.sudharkj.posterdecoder.kotlin.views.DrawingView
+import com.sudharkj.posterdecoder.kotlin.views.CropView
 
 import kotlinx.android.synthetic.main.activity_boundary.*
 import kotlinx.android.synthetic.main.content_boundary.*
+import org.opencv.android.Utils
+import org.opencv.core.Mat
+import org.opencv.imgproc.Imgproc
 import java.io.FileOutputStream
 import java.io.IOException
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
+import org.opencv.android.LoaderCallbackInterface
+import org.opencv.android.BaseLoaderCallback
+import org.opencv.android.OpenCVLoader
+import org.opencv.core.MatOfPoint
+import org.opencv.core.Point
+import java.util.*
+import kotlin.Comparator
+import kotlin.collections.ArrayList
+
 
 class BoundaryActivity : AppCompatActivity() {
 
@@ -45,8 +57,8 @@ class BoundaryActivity : AppCompatActivity() {
 //        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    private class CroppedImage(view: DrawingView) : AsyncObject<Uri?> {
-        val view: DrawingView = view
+    private class CroppedImage(view: CropView) : AsyncObject<Uri?> {
+        val view: CropView = view
         companion object {
             const val TAG: String = "CroppedImage"
         }
@@ -103,10 +115,45 @@ class BoundaryActivity : AppCompatActivity() {
             return null
         }
 
+        private val mLoaderCallback = object : BaseLoaderCallback(view.context) {
+            override fun onManagerConnected(status: Int) {
+                when (status) {
+                    LoaderCallbackInterface.SUCCESS -> {
+                        Log.i("OpenCV", "OpenCV loaded successfully")
+                    }
+                    else -> {
+                        Log.i("OpenCV", "Loading OpenCV")
+                        super.onManagerConnected(status)
+                    }
+                }
+            }
+        }
+
         override fun process(): Uri? {
             val croppedBitmap = getCroppedBitmap()
             Log.d(TAG, "Obtained cropped bitmap")
-            return saveBitmap(croppedBitmap)
+            if (!OpenCVLoader.initDebug()) {
+                OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_4_0, view.context, mLoaderCallback)
+            } else {
+                mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS)
+            }
+            val mat = Mat()
+            Utils.bitmapToMat(croppedBitmap, mat)
+            Imgproc.cvtColor(mat, mat, Imgproc.COLOR_BGR2GRAY)
+            Imgproc.Canny(mat, mat, 50.toDouble(), 50.toDouble())
+            var contours: List<MatOfPoint> = ArrayList()
+            var hierarchy = Mat()
+            Imgproc.findContours(mat.clone(), contours, hierarchy, Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE)
+//            val contourSet = sortedSetOf(contours, object : Comparator<MatOfPoint> {
+//                override fun compare(o1: MatOfPoint?, o2: MatOfPoint?): Int {
+//                    val a1 = Imgproc.contourArea(o1)
+//                    val a2 = Imgproc.contourArea(o2)
+//                    return (a1 - a2).toInt()
+//                }
+//            })
+            val newBitmap = Bitmap.createBitmap(mat.cols(), mat.rows(), Bitmap.Config.ARGB_8888)
+            Utils.matToBitmap(mat, newBitmap)
+            return saveBitmap(newBitmap)
         }
     }
 
@@ -119,7 +166,7 @@ class BoundaryActivity : AppCompatActivity() {
         override fun processFinish(uri: Uri?) {
             Log.d(TAG, "Processed image crop uri")
             uri?.let {
-                Intent(activity, ContourActivity::class.java).also {
+                Intent(activity, ImageActivity::class.java).also {
                     it.putExtra(MediaStore.EXTRA_OUTPUT, uri)
                     activity.startActivity(it)
                 }
