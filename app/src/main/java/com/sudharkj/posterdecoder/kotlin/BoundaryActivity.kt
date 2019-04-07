@@ -21,7 +21,6 @@ import com.sudharkj.posterdecoder.kotlin.views.CropView
 import kotlinx.android.synthetic.main.activity_boundary.*
 import kotlinx.android.synthetic.main.content_boundary.*
 import org.opencv.android.Utils
-import org.opencv.core.Mat
 import org.opencv.imgproc.Imgproc
 import java.io.FileOutputStream
 import java.io.IOException
@@ -32,9 +31,8 @@ import kotlin.math.min
 import org.opencv.android.LoaderCallbackInterface
 import org.opencv.android.BaseLoaderCallback
 import org.opencv.android.OpenCVLoader
-import org.opencv.core.MatOfPoint
-import org.opencv.core.Point
-import java.util.*
+import org.opencv.core.*
+import org.opencv.utils.Converters
 import kotlin.Comparator
 import kotlin.collections.ArrayList
 
@@ -51,10 +49,8 @@ class BoundaryActivity : AppCompatActivity() {
 
         boundary_next.setOnClickListener { view ->
             ImageAsyncTask(CroppedImage(boundary_image), CroppedImageUri(this)).execute()
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
         }
-//        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     private class CroppedImage(view: CropView) : AsyncObject<Uri?> {
@@ -137,27 +133,78 @@ class BoundaryActivity : AppCompatActivity() {
             } else {
                 mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS)
             }
+            val (width, height) = croppedBitmap.width to croppedBitmap.height
+//            val inputMat = Mat(width, height, CvType.CV_8UC4)
             val mat = Mat()
             Utils.bitmapToMat(croppedBitmap, mat)
             Imgproc.cvtColor(mat, mat, Imgproc.COLOR_BGR2GRAY)
-            Imgproc.Canny(mat, mat, 50.toDouble(), 50.toDouble())
+//            Imgproc.Canny(mat, mat, 50.toDouble(), 50.toDouble())
+            Imgproc.adaptiveThreshold(mat, mat, 255.0, Imgproc.ADAPTIVE_THRESH_MEAN_C,
+                Imgproc.THRESH_BINARY, 15, 40.0)
+
             var contours: List<MatOfPoint> = ArrayList()
             var hierarchy = Mat()
             Imgproc.findContours(mat.clone(), contours, hierarchy, Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE)
-//            val contourSet = sortedSetOf(contours, object : Comparator<MatOfPoint> {
-//                override fun compare(o1: MatOfPoint?, o2: MatOfPoint?): Int {
-//                    val a1 = Imgproc.contourArea(o1)
-//                    val a2 = Imgproc.contourArea(o2)
-//                    return (a1 - a2).toInt()
-//                }
-//            })
-            val newBitmap = Bitmap.createBitmap(mat.cols(), mat.rows(), Bitmap.Config.ARGB_8888)
+
+            // sort the contours
+            Log.d(TAG, "[Initial]")
+            Log.d(TAG, contours.map {
+                Imgproc.contourArea(it).toString()
+            }.joinToString())
+            contours = contours.sortedWith(Comparator {
+                    o1: MatOfPoint, o2: MatOfPoint -> Imgproc.contourArea(o2).toInt() - Imgproc.contourArea(o1).toInt()
+            })
+            Log.d(TAG, "[Final]")
+            Log.d(TAG, contours.map {
+                Imgproc.contourArea(it).toString()
+            }.joinToString())
+
+            // find the largest contour
+            var source : List<Point> = ArrayList()
+            for (contour in contours) {
+                val approxCurve = MatOfPoint2f()
+                val contour2f = MatOfPoint2f()
+                contour.convertTo(contour2f, CvType.CV_32FC2)
+                val approxDistance = Imgproc.arcLength(contour2f, true) * 0.02
+                Imgproc.approxPolyDP(contour2f, approxCurve, approxDistance, true)
+                val points = MatOfPoint()
+                approxCurve.convertTo(points, CvType.CV_32SC2)
+                if (points.toArray().size == 4) {
+                    Log.d(TAG, "[Found] $contour")
+                    source = points.toList()
+                    break
+                }
+            }
+            Log.d(TAG, "[Found] $source")
+
+//            val (width, height) = croppedBitmap.width to croppedBitmap.height
+//            val inputMat = Mat(width, height, CvType.CV_8UC4)
+//            Utils.bitmapToMat(croppedBitmap, inputMat)
+//            val outputMat = Mat(width, height, CvType.CV_8UC4)
+
+//            val start = Converters.vector_Point2f_to_Mat(source)
+//            val o1 = Point(0.0, 0.0)
+//            val o2 = Point(0.0, height.toDouble())
+//            val o3 = Point(width.toDouble(), height.toDouble())
+//            val o4 = Point(width.toDouble(), 0.0)
+//            val destination = ArrayList<Point>()
+//            destination.add(o1)
+//            destination.add(o2)
+//            destination.add(o3)
+//            destination.add(o4)
+//            val end = Converters.vector_Point2f_to_Mat(destination)
+
+//            val perspectiveTransform = Imgproc.getPerspectiveTransform(start, end)
+//            Imgproc.warpPerspective(inputMat, outputMat, perspectiveTransform,
+//                Size(width.toDouble(), height.toDouble()), Imgproc.INTER_CUBIC)
+
+            val newBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
             Utils.matToBitmap(mat, newBitmap)
             return saveBitmap(newBitmap)
         }
     }
 
-    private class CroppedImageUri(activity: Activity) : AsyncResponse {
+    private class CroppedImageUri(activity: Activity) : AsyncResponse<Uri?> {
         val activity: Activity = activity
         companion object {
             const val TAG: String = "CroppedImageUri"

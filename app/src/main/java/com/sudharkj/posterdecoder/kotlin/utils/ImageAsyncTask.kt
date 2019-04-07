@@ -1,19 +1,19 @@
 package com.sudharkj.posterdecoder.kotlin.utils
 
-import android.net.Uri
 import android.os.AsyncTask
 import com.sudharkj.posterdecoder.kotlin.models.AsyncObject
 import com.sudharkj.posterdecoder.kotlin.models.AsyncResponse
 
-class ImageAsyncTask(view: AsyncObject<Uri?>, response: AsyncResponse) : AsyncTask<Void, Int, Uri?>() {
-    private val view: AsyncObject<Uri?> = view
-    private val response: AsyncResponse = response
+class ImageAsyncTask<Response>(view: AsyncObject<Response>,
+                               response: AsyncResponse<Response>) : AsyncTask<Void, Int, Response>() {
+    private val view: AsyncObject<Response> = view
+    private val response: AsyncResponse<Response> = response
 
-    override fun doInBackground(vararg params: Void?): Uri? {
+    override fun doInBackground(vararg params: Void?): Response {
         return view.process()
     }
 
-    override fun onPostExecute(result: Uri?) {
+    override fun onPostExecute(result: Response) {
         response.processFinish(result)
     }
 }

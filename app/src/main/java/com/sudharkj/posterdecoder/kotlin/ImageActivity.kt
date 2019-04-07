@@ -19,10 +19,10 @@ class ImageActivity : AppCompatActivity() {
         val photoUri: Uri = intent.extras.get(MediaStore.EXTRA_OUTPUT) as Uri
         scanned_image.setImageURI(photoUri)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
+//        fab.setOnClickListener { view ->
+//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                .setAction("Action", null).show()
+//        }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 

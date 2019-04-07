@@ -1,12 +1,12 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml:2:1-8:12
-INJECTED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml:2:1-8:12
-INJECTED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml:2:1-8:12
-INJECTED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml:2:1-8:12
-INJECTED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml:2:1-8:12
-INJECTED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml:2:1-8:12
-INJECTED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml:2:1-8:12
+ADDED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml:2:1-6:12
+INJECTED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml:2:1-6:12
+INJECTED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml:2:1-6:12
+INJECTED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml:2:1-6:12
+INJECTED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml:2:1-6:12
+INJECTED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml:2:1-6:12
+INJECTED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml:2:1-6:12
 	package
 		ADDED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml:3:7-27
 		INJECTED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml
@@ -22,16 +22,16 @@ INJECTED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/s
 		INJECTED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml
 		INJECTED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml
 uses-sdk
-ADDED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml:7:5-73
-INJECTED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml:7:5-73
-INJECTED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml:7:5-73
-INJECTED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml:7:5-73
-INJECTED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml:7:5-73
+INJECTED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml
+INJECTED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml
+INJECTED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml
+INJECTED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml
 	android:targetSdkVersion
-		ADDED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml:7:41-70
 		INJECTED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml
+		ADDED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml
 		INJECTED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml
 	android:minSdkVersion
-		ADDED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml:7:15-40
 		INJECTED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml
+		ADDED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml
 		INJECTED from /Users/sudharkj/Developer/kotlin/PosterDecoder_Kotlin/opencv-lib/src/main/AndroidManifest.xml

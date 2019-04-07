@@ -19,11 +19,11 @@
         <activity
                 android:name=".ImageActivity"
                 android:label="@string/title_activity_image"
-                android:parentActivityName=".BoundaryActivity"
+                android:parentActivityName=".MainActivity"
                 android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value="com.sudharkj.posterdecoder.kotlin.BoundaryActivity"/>
+                    android:value="com.sudharkj.posterdecoder.kotlin.MainActivity"/>
         </activity>
 
         <provider

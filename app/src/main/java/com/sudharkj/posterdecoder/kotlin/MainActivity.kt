@@ -1,18 +1,26 @@
 package com.sudharkj.posterdecoder.kotlin
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import android.view.*
 import androidx.appcompat.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuItem
+import android.widget.BaseAdapter
+import android.widget.GridView
 import androidx.core.content.FileProvider
 import androidx.core.net.toUri
+import com.sudharkj.posterdecoder.kotlin.models.AsyncObject
+import com.sudharkj.posterdecoder.kotlin.models.AsyncResponse
 import com.sudharkj.posterdecoder.kotlin.utils.Helper
+import com.sudharkj.posterdecoder.kotlin.utils.ImageAsyncTask
 
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.content_main.*
+import kotlinx.android.synthetic.main.image_entry.view.*
 import java.io.File
 import java.io.IOException
 
@@ -29,6 +37,54 @@ class MainActivity : AppCompatActivity() {
 
         fab_camera.setOnClickListener {
             dispatchTakePictureIntent()
+        }
+        ImageAsyncTask(FetchImages(getExternalFilesDir(Environment.DIRECTORY_PICTURES)),
+            LoadImages(application, scanned_images)).execute()
+    }
+
+
+    class FetchImages(private val dir: File?) : AsyncObject<List<Uri>> {
+        override fun process(): List<Uri> {
+            val files = dir!!.listFiles()
+            val fileUris = ArrayList<Uri>()
+            for (file in files) {
+                fileUris.add(file.toUri())
+            }
+            return fileUris
+        }
+    }
+
+    class LoadImages(private val context: Context, private val view: GridView) : AsyncResponse<List<Uri>> {
+        override fun processFinish(fileUris: List<Uri>) {
+            view.adapter = ScannedImageAdapter(context, fileUris)
+        }
+    }
+
+    class ScannedImageAdapter(private val context: Context, private val fileNames: List<Uri?>) : BaseAdapter() {
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+            var inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            var imageView = inflater.inflate(R.layout.image_entry, null)
+            imageView.scanned_image.setImageURI(fileNames[position])
+
+            imageView.setOnClickListener {
+                val intent = Intent(context, ImageActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, fileNames[position])
+                context.startActivity(intent)
+            }
+            return imageView
+        }
+
+        override fun getItem(position: Int): Uri? {
+            return fileNames[position]
+        }
+
+        override fun getItemId(position: Int): Long {
+            return position.toLong()
+        }
+
+        override fun getCount(): Int {
+            return fileNames.size
         }
     }
 
